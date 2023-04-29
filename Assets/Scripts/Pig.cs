@@ -1,35 +1,50 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Pig : MonoBehaviour
+public class Pig : MonoBehaviour, IHealth
 {
+    [SerializeField] private int maxHealth = 150;
+    [SerializeField] private int currentHealth;
+    public Sprite SpriteShownWhenHurt;
+    private int hurtPigHealth = 130;
+
+    public int MaxHealth => maxHealth;
+    public int CurrentHealth => currentHealth;
+
     void Start()
     {
-        ChangeSpriteHealth = Health - 30f;
+        currentHealth = maxHealth;
+        hurtPigHealth = CurrentHealth - 30;
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.GetComponent<Rigidbody2D>() == null) return;
+        if (col.gameObject.GetComponent<Rigidbody2D>() == null) 
+            return;
 
-        if (col.gameObject.tag == "Bird")
+        if (col.gameObject.CompareTag("Bird"))
         {
             GetComponent<AudioSource>().Play();
             Destroy(gameObject);
         }
         else
         {
-            float damage = col.gameObject.GetComponent<Rigidbody2D>().velocity.magnitude * 10;
-            Health -= damage;
-            if (damage >= 10)
-                GetComponent<AudioSource>().Play();
-            if (Health < ChangeSpriteHealth)
-                GetComponent<SpriteRenderer>().sprite = SpriteShownWhenHurt;
-            if (Health <= 0) Destroy(this.gameObject);
+            int damage = (int) col.gameObject.GetComponent<Rigidbody2D>().velocity.magnitude * 10;
+            ReceiveDamage(damage);
+            GetComponent<AudioSource>().Play();
+            switch (currentHealth)
+            {
+                case 120:
+                    GetComponent<SpriteRenderer>().sprite = SpriteShownWhenHurt;
+                    break;
+                case 0:
+                    Destroy(this.gameObject);
+                    break;
+            }
         }
     }
-    
-    public float Health = 150f;
-    public Sprite SpriteShownWhenHurt;
-    private float ChangeSpriteHealth;
+    public void ReceiveDamage(int amount)
+    {
+        currentHealth -= amount;
+    }
 }
