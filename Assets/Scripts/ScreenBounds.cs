@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Destroyer : MonoBehaviour {
+public class ScreenBounds : MonoBehaviour {
     
     void OnTriggerEnter2D(Collider2D col)
     {

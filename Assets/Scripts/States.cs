@@ -26,5 +26,4 @@ namespace Assets.Scripts
         BeforeThrown,
         Thrown
     }
-    
 }
