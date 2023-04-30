@@ -4,28 +4,40 @@ using Assets.Scripts;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Bird : MonoBehaviour
+
 {
+    [SerializeField] private float minVelocity = 0.05f;
+    [SerializeField] private float birdCollider = 0.235f;
+    [SerializeField] private float birdColliderBig = 0.5f;
+    public BirdState State { get; private set; }
 
-    public void AlDispararPajaro()
+
+    private void Start()
     {
-        GetComponent<AudioSource>().Play(); GetComponent<TrailRenderer>().enabled = true; GetComponent<Rigidbody2D>().isKinematic = false; GetComponent<CircleCollider2D>().radius = Constants.BirdColliderRadiusNormal; State = BirdState.Thrown;
+        GetReadyBirdToThrow();
+        State = BirdState.BeforeThrown;
+    }
+    public virtual void ShootBird()
+    {
+        GetComponent<AudioSource>().Play();
+        GetComponent<TrailRenderer>().enabled = true; 
+        GetComponent<Rigidbody2D>().isKinematic = false; 
+        GetComponent<CircleCollider2D>().radius = birdCollider; 
+        State = BirdState.Thrown;
     }
 
-    IEnumerator DestroyAfter(float seconds)  {  yield return new WaitForSeconds(seconds); Destroy(gameObject); }
-    public BirdState State {  get; private set; }
-
-    void FixedUpdate()
+    public void OnCollisionEnter2D(Collision2D collision)
     {
-        if (State == BirdState.Thrown && GetComponent<Rigidbody2D>().velocity.sqrMagnitude <= Constants.Min_Velocity)
-            StartCoroutine(DestroyAfter(2));
+        if (collision.gameObject.GetComponent<Pig>() != null)
+            collision.gameObject.GetComponent<Pig>().ReceiveDamage(50);
     }
-    
-    void Start()
+
+
+    private void GetReadyBirdToThrow()
     {
         GetComponent<TrailRenderer>().enabled = false;
         GetComponent<TrailRenderer>().sortingLayerName = "Foreground";
         GetComponent<Rigidbody2D>().isKinematic = true;
-        GetComponent<CircleCollider2D>().radius = Constants.Bird_Collider_Radius_Big;
-        State = BirdState.BeforeThrown;
+        GetComponent<CircleCollider2D>().radius = birdColliderBig;
     }
 }

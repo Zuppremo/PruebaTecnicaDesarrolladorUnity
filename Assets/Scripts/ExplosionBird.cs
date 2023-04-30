@@ -21,6 +21,7 @@ public class ExplosionBird : Bird
     {
         explosionParticlesGO.SetActive(false);
         rb = GetComponent<Rigidbody2D>();
+        BirdExplodedAction += DissapearBird;
     }
     private void ExplodeBird()
     {
@@ -37,8 +38,6 @@ public class ExplosionBird : Bird
 
                 if (obj.GetComponent<Pig>() != null)
                     obj.GetComponent<Pig>().ReceiveDamage(50);
-                //else if (obj.GetComponent<Brick>() != null)
-                   // obj.GetComponent<Brick>().ReceiveDamage(50);
             }
         }
     }
@@ -61,10 +60,20 @@ public class ExplosionBird : Bird
         ExplodeBird();
     }
 
+    private void DissapearBird()
+    {
+        StartCoroutine(DissapearBirdAfterTime());
+    }
+
     private IEnumerator DissapearBirdAfterTime()
     {
         yield return new WaitForSeconds(3F);
         gameObject.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        BirdExplodedAction -= DissapearBird;
     }
 
 }
