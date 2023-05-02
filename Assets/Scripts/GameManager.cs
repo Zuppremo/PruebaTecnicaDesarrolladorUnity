@@ -2,23 +2,26 @@
 using System.Collections.Generic;
 using Assets.Scripts;
 using System.Linq;
+using System;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private CameraFollow cameraFollow;
     [SerializeField] private SlingShot slingshot;
     [SerializeField] private Bird[] birds;
+    [SerializeField] private List<Bird> birdPrefabs;
+    [SerializeField] private List<Transform> birdSpawnPoints;
     private int currentBirdIndex;
-    public static GameState currentGameState = GameState.Start;
     private Pig[] pigs;
     private UIController uiController;
+    public static GameState currentGameState = GameState.Start;
 
     public GameState CurrentGameState => currentGameState;
 
-    void Start()
+    private void Awake()
     {
         uiController = FindObjectOfType<UIController>();
-        birds = FindObjectsOfType<Bird>();
+        birds = LoadBirds();
         pigs = FindObjectsOfType<Pig>();
         currentGameState = GameState.Start;
         slingshot.enabled = false;
@@ -89,6 +92,18 @@ public class GameManager : MonoBehaviour
                     AnimateBirdToSlingshot();
                 }
             });
+    }
+
+    private Bird[] LoadBirds()
+    {
+        string[] loadedBirds = PlayerPrefs.GetString("SelectedBirds").Split(',');
+        Bird[] birds = new Bird[loadedBirds.Length];
+        for (int i = 0; i < loadedBirds.Length; i++)
+        {
+            Birds birdType = (Birds)Convert.ToInt32(loadedBirds[i]);
+            birds[i] = Instantiate(birdPrefabs.Find(b => b.BirdType == birdType), birdSpawnPoints[i].position, Quaternion.identity);
+        }
+        return birds;
     }
 
     void AnimateBirdToSlingshot()
