@@ -16,7 +16,11 @@ GameObject:
   - component: {fileID: 5328014315771633793}
   - component: {fileID: 5328014315761746881}
   m_Layer: 0
+<<<<<<<< HEAD:Assets/Prefabs/MultipleBird.prefab
   m_Name: MultipleBird
+========
+  m_Name: pinkBird
+>>>>>>>> UI:Assets/Prefabs/pinkBird.prefab
   m_TagString: Bird
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -133,12 +137,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 5328014315764079137}
   m_Enabled: 1
   m_EditorHideFlags: 0
+<<<<<<<< HEAD:Assets/Prefabs/MultipleBird.prefab
   m_Script: {fileID: 11500000, guid: a1d7e540c069f4940aef69ea79b8bbe9, type: 3}
+========
+  m_Script: {fileID: 11500000, guid: 654322d6fd732634b8381654eceac944, type: 3}
+>>>>>>>> UI:Assets/Prefabs/pinkBird.prefab
   m_Name: 
   m_EditorClassIdentifier: 
   minVelocity: 0.05
   birdCollider: 0.235
   birdColliderBig: 0.5
+<<<<<<<< HEAD:Assets/Prefabs/MultipleBird.prefab
   birds: 2
   copiesScale: 0.7
   birdCopy: {fileID: 5328014315764079137}
@@ -146,6 +155,10 @@ MonoBehaviour:
   birdPositionDown: {fileID: 0}
   floorPosition: {fileID: 0}
 --- !u!96 &5328014315771633793
+========
+  explosionForce: 0.4
+--- !u!96 &9600000
+>>>>>>>> UI:Assets/Prefabs/pinkBird.prefab
 TrailRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
