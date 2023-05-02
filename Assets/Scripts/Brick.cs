@@ -1,18 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Brick : MonoBehaviour
+public class Brick : MonoBehaviour, IHealth
 {
-    void OnCollisionEnter2D(Collision2D col)
-    {
-        if (col.gameObject.GetComponent<Rigidbody2D>() == null) return;
+    [SerializeField] private int maxHealth = 70;
+    private int currentHealth;
 
-        float damage = col.gameObject.GetComponent<Rigidbody2D>().velocity.magnitude * 10;
-        if (damage >= 10)
-            GetComponent<AudioSource>().Play();
-        Health -= damage;
-        if (Health <= 0) Destroy(this.gameObject);
+    public int MaxHealth => maxHealth;
+
+    public int CurrentHealth => currentHealth;
+
+    private void Start()
+    {
+        currentHealth = maxHealth;
     }
 
-    public float Health = 70f;
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.GetComponent<Rigidbody2D>() == null) 
+            return;
+
+        if (col.gameObject.GetComponent<Bird>())
+        {
+            GetComponent<AudioSource>().Play();
+            ReceiveDamage(CalculateDamage(col));
+        }
+
+        if (CurrentHealth <= 0) 
+            Destroy(this.gameObject);
+
+    }
+
+    public void ReceiveDamage(int amount)
+    {
+        currentHealth -= amount;
+    }
+
+    private int CalculateDamage(Collision2D col)
+    {
+        int damage = (int)col.gameObject.GetComponent<Rigidbody2D>().velocity.magnitude * 10;
+        return damage;
+    }
 }

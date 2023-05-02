@@ -5,10 +5,12 @@ public class ScreenBounds : MonoBehaviour {
     
     void OnTriggerEnter2D(Collider2D col)
     {
-        string tag = col.gameObject.tag;
-        if(tag == "Bird" || tag == "Pig" || tag == "Brick")
+        if(col.gameObject.GetComponent<Bird>())
         {
-            Destroy(col.gameObject);
+            col.gameObject.SetActive(false);
         }
+
+        if (col.gameObject.GetComponent<Brick>() || col.gameObject.GetComponent<Pig>())
+            Destroy(col.gameObject);
     }
 }

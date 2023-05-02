@@ -4,6 +4,29 @@ using System;
 
 public class SlingShot : MonoBehaviour
 {
+
+    private Vector3 SlingshotMiddleVector;
+
+    [HideInInspector]
+    public SlingshotState slingshotState;
+
+    public Transform LeftSlingshotOrigin, RightSlingshotOrigin;
+
+    public LineRenderer SlingshotLineRenderer1;
+    public LineRenderer SlingshotLineRenderer2;
+
+    public LineRenderer TrajectoryLineRenderer;
+
+    [HideInInspector]
+    public GameObject BirdToThrow;
+
+    public Transform BirdWaitPosition;
+
+    public float ThrowSpeed;
+
+    [HideInInspector]
+    public float TimeSinceThrown;
+
     void Start()
     {
         SlingshotLineRenderer1.sortingLayerName = "Foreground";
@@ -89,7 +112,7 @@ public class SlingShot : MonoBehaviour
     private void TirarPajaro(float distance)
     {
         Vector3 velocity = SlingshotMiddleVector - BirdToThrow.transform.position;
-        BirdToThrow.GetComponent<Bird>().AlDispararPajaro();
+        BirdToThrow.GetComponent<Bird>().ShootBird();
         BirdToThrow.GetComponent<Rigidbody2D>().velocity = new Vector2(velocity.x, velocity.y) * ThrowSpeed * distance;
         if (BirdThrown != null)
             BirdThrown(this, EventArgs.Empty);
@@ -144,25 +167,4 @@ public class SlingShot : MonoBehaviour
             TrajectoryLineRenderer.SetPosition(i, segments[i]);
     }
     
-    private Vector3 SlingshotMiddleVector;
-
-    [HideInInspector]
-    public SlingshotState slingshotState;
-
-    public Transform LeftSlingshotOrigin, RightSlingshotOrigin;
-
-    public LineRenderer SlingshotLineRenderer1;
-    public LineRenderer SlingshotLineRenderer2;
-    
-    public LineRenderer TrajectoryLineRenderer;
-    
-    [HideInInspector]
-    public GameObject BirdToThrow;
-
-    public Transform BirdWaitPosition;
-
-    public float ThrowSpeed;
-
-    [HideInInspector]
-    public float TimeSinceThrown;
 }

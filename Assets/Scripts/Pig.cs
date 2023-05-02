@@ -4,9 +4,8 @@ using System.Collections;
 public class Pig : MonoBehaviour, IHealth
 {
     [SerializeField] private int maxHealth = 150;
-    [SerializeField] private int currentHealth;
+    private int currentHealth;
     public Sprite SpriteShownWhenHurt;
-    private int hurtPigHealth = 130;
 
     public int MaxHealth => maxHealth;
     public int CurrentHealth => currentHealth;
@@ -14,37 +13,31 @@ public class Pig : MonoBehaviour, IHealth
     void Start()
     {
         currentHealth = maxHealth;
-        hurtPigHealth = CurrentHealth - 30;
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
+        if (currentHealth <= 0)
+            Destroy(gameObject);
+        else if (currentHealth <= 120)
+            GetComponent<SpriteRenderer>().sprite = SpriteShownWhenHurt;
+
         if (col.gameObject.GetComponent<Rigidbody2D>() == null) 
             return;
 
-        if (col.gameObject.CompareTag("Bird"))
-        {
-            GetComponent<AudioSource>().Play();
-            Destroy(gameObject);
-        }
+        if (col.gameObject.GetComponent<Bird>())
+            ReceiveDamage(25);
         else
-        {
-            int damage = (int) col.gameObject.GetComponent<Rigidbody2D>().velocity.magnitude * 10;
-            ReceiveDamage(damage);
-            GetComponent<AudioSource>().Play();
-            switch (currentHealth)
-            {
-                case 120:
-                    GetComponent<SpriteRenderer>().sprite = SpriteShownWhenHurt;
-                    break;
-                case 0:
-                    Destroy(this.gameObject);
-                    break;
-            }
-        }
+            ReceiveDamage(CalculateDamage(col));
     }
     public void ReceiveDamage(int amount)
     {
         currentHealth -= amount;
+    }
+
+    private int CalculateDamage(Collision2D col)
+    {
+        int damage = (int)col.gameObject.GetComponent<Rigidbody2D>().velocity.magnitude * 10;
+        return damage;
     }
 }

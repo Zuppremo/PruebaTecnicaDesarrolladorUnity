@@ -5,27 +5,37 @@ using Assets.Scripts;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Bird : MonoBehaviour
 {
+    [SerializeField] private float minVelocity = 0.05f;
+    [SerializeField] private float birdCollider = 0.235f;
+    [SerializeField] private float birdColliderBig = 0.5f;
+    [SerializeField] private Birds birds = Birds.Normal;
+    public BirdState State { get; private set; }
 
-    public void AlDispararPajaro()
+
+    private void Start()
     {
-        GetComponent<AudioSource>().Play(); GetComponent<TrailRenderer>().enabled = true; GetComponent<Rigidbody2D>().isKinematic = false; GetComponent<CircleCollider2D>().radius = Constants.BirdColliderRadiusNormal; State = BirdState.Thrown;
+        GetReadyBirdToThrow();
+        State = BirdState.BeforeThrown;
     }
-
-    IEnumerator DestroyAfter(float seconds)  {  yield return new WaitForSeconds(seconds); Destroy(gameObject); }
-    public BirdState State {  get; private set; }
-
-    void FixedUpdate()
+    public virtual void ShootBird()
     {
-        if (State == BirdState.Thrown && GetComponent<Rigidbody2D>().velocity.sqrMagnitude <= Constants.Min_Velocity)
-            StartCoroutine(DestroyAfter(2));
+        GetComponent<AudioSource>().Play();
+        GetComponent<TrailRenderer>().enabled = true; 
+        GetComponent<Rigidbody2D>().isKinematic = false; 
+        GetComponent<CircleCollider2D>().radius = birdCollider; 
+        State = BirdState.Thrown;
+        StartCoroutine(DissapearAfterTime());
     }
-    
-    void Start()
+    private void GetReadyBirdToThrow()
     {
         GetComponent<TrailRenderer>().enabled = false;
         GetComponent<TrailRenderer>().sortingLayerName = "Foreground";
         GetComponent<Rigidbody2D>().isKinematic = true;
-        GetComponent<CircleCollider2D>().radius = Constants.Bird_Collider_Radius_Big;
-        State = BirdState.BeforeThrown;
+    }
+
+    private IEnumerator DissapearAfterTime()
+    {
+        yield return new WaitForSeconds(5F);
+        gameObject.SetActive(false);
     }
 }

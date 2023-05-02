@@ -6,22 +6,25 @@ using System.Linq;
 public class GameManager : MonoBehaviour
 {
 
-    public CameraFollow cameraFollow;
-    int currentBirdIndex;
-    public SlingShot slingshot;
-    [HideInInspector]
-    public static GameState CurrentGameState = GameState.Start;
-    private List<GameObject> Bricks;
-    private List<GameObject> Birds;
-    private List<GameObject> Pigs;
+    [SerializeField] private CameraFollow cameraFollow;
+    [SerializeField] private SlingShot slingshot;
+    [SerializeField] private Bird[] birds;
+    private int currentBirdIndex;
+    public static GameState currentGameState = GameState.Start;
+    private Brick[] bricks;
+    private Pig[] pigs;
+    private UIController uiController;
+
+    public GameState CurrentGameState => currentGameState;
 
     void Start()
     {
-        CurrentGameState = GameState.Start;
+        uiController = FindObjectOfType<UIController>();
+        birds = FindObjectsOfType<Bird>();
+        bricks = FindObjectsOfType<Brick>();
+        pigs = FindObjectsOfType<Pig>();
+        currentGameState = GameState.Start;
         slingshot.enabled = false;
-        Bricks = new List<GameObject>(GameObject.FindGameObjectsWithTag("Brick"));
-        Birds = new List<GameObject>(GameObject.FindGameObjectsWithTag("Bird"));
-        Pigs = new List<GameObject>(GameObject.FindGameObjectsWithTag("Pig"));
         slingshot.BirdThrown -= Slingshot_BirdThrown; slingshot.BirdThrown += Slingshot_BirdThrown;
     }
 
@@ -36,27 +39,36 @@ public class GameManager : MonoBehaviour
             case GameState.BirdMovingToSlingshot:
                 break;
             case GameState.Playing:
-                if (slingshot.slingshotState == SlingshotState.BirdFlying &&
-                    (BricksBirdsPigsStoppedMoving() || Time.time - slingshot.TimeSinceThrown > 5f))
+                if (slingshot.slingshotState == SlingshotState.BirdFlying && (Time.time - slingshot.TimeSinceThrown > 7f))
                 {
                     slingshot.enabled = false;
                     AnimateCamera_ToStartPosition();
-                    CurrentGameState = GameState.BirdMovingToSlingshot;
+                    currentGameState = GameState.BirdMovingToSlingshot;
                 }
                 break;
             case GameState.Won:
+                if (pigs.Length == pigs.Length - 1)
+                {
+                    uiController.ToggleUI(true);
+                    uiController.ToggleWinScreen(true);
+                }
+                break;
             case GameState.Lost:
                 if (Input.GetMouseButtonUp(0))
-                    Application.LoadLevel(Application.loadedLevel);
+                {
+                    uiController.ToggleUI(true);
+                    uiController.ToggleLoseScreen(true);
+                    //Application.LoadLevel(Application.loadedLevel);
+                }
                 break;
             default:
                 break;
         }
     }
     
-    private bool TodosLosCerdosDestruidos()
+    private bool VerifyEndGame()
     {
-        return Pigs.All(x => x == null);
+        return pigs.All(x => x == null);
     }
 
     private void AnimateCamera_ToStartPosition()
@@ -70,10 +82,10 @@ public class GameManager : MonoBehaviour
             setOnCompleteHandler((x) =>
             {
                 cameraFollow.IsFollowing = false;
-                if (TodosLosCerdosDestruidos())
-                    CurrentGameState = GameState.Won;
-                else if (currentBirdIndex == Birds.Count - 1)
-                    CurrentGameState = GameState.Lost;
+                if (VerifyEndGame())
+                    currentGameState = GameState.Won;
+                else if (currentBirdIndex == birds.Length - 1)
+                    currentGameState = GameState.Lost;
                 else
                 {
                     slingshot.slingshotState = SlingshotState.Idle;
@@ -85,64 +97,24 @@ public class GameManager : MonoBehaviour
 
     void AnimateBirdToSlingshot()
     {
-        CurrentGameState = GameState.BirdMovingToSlingshot;
-        Birds[currentBirdIndex].transform.positionTo
-            (Vector2.Distance(Birds[currentBirdIndex].transform.position / 10,
+        currentGameState = GameState.BirdMovingToSlingshot;
+        birds[currentBirdIndex].transform.positionTo
+            (Vector2.Distance(birds[currentBirdIndex].transform.position / 10,
             slingshot.BirdWaitPosition.transform.position) / 10, //duration
             slingshot.BirdWaitPosition.transform.position). //final position
                 setOnCompleteHandler((x) =>
                         {
                             x.complete();
                             x.destroy();
-                            CurrentGameState = GameState.Playing;
+                            currentGameState = GameState.Playing;
                             slingshot.enabled = true;
-                            slingshot.BirdToThrow = Birds[currentBirdIndex];
+                            slingshot.BirdToThrow = birds[currentBirdIndex].gameObject;
                         });
     }
 
     private void Slingshot_BirdThrown(object sender, System.EventArgs e)
     {
-        cameraFollow.BirdToFollow = Birds[currentBirdIndex].transform;
+        cameraFollow.BirdToFollow = birds[currentBirdIndex].transform;
         cameraFollow.IsFollowing = true;
     }
-
-    bool BricksBirdsPigsStoppedMoving()
-    {
-        foreach (var item in Bricks.Union(Birds).Union(Pigs))
-        {
-            if (item != null && item.GetComponent<Rigidbody2D>().velocity.sqrMagnitude > Constants.Min_Velocity)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public static void AutoResize(int screenWidth, int screenHeight)
-    {
-        Vector2 resizeRatio = new Vector2((float)Screen.width / screenWidth, (float)Screen.height / screenHeight);
-        GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(resizeRatio.x, resizeRatio.y, 1.0f));
-    }
-
-    void OnGUI()
-    {
-        AutoResize(800, 480);
-        switch (CurrentGameState)
-        {
-            case GameState.Start:
-                GUI.Label(new Rect(0, 150, 200, 100), "Tap the screen to start");
-                break;
-            case GameState.Won:
-                GUI.Label(new Rect(0, 150, 200, 100), "Has ganado! Tap the screen to restart");
-                break;
-            case GameState.Lost:
-                GUI.Label(new Rect(0, 150, 200, 100), "Has perdido! Tap the screen to restart");
-                break;
-            default:
-                break;
-        }
-    }
-
-
 }
