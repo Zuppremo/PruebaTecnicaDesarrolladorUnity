@@ -10,9 +10,9 @@ public class Bird : MonoBehaviour
     [SerializeField] private float birdColliderBig = 0.5f;
 
     public BirdState State { get; private set; }
-    public virtual Birds BirdType { get;}
+    public virtual Birds BirdType { get; } = Birds.Normal;
 
-    private void Start()
+    private void Awake()
     {
         GetReadyBirdToThrow();
         State = BirdState.BeforeThrown;
