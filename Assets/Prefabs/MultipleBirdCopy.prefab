@@ -25,13 +25,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5328014315760752577, guid: 84cbf578b1ff1684f966b45e1d7af7ea,
         type: 3}
+      propertyPath: m_Mass
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5328014315760752577, guid: 84cbf578b1ff1684f966b45e1d7af7ea,
+        type: 3}
       propertyPath: m_BodyType
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5328014315760752577, guid: 84cbf578b1ff1684f966b45e1d7af7ea,
         type: 3}
       propertyPath: m_CollisionDetection
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5328014315764079137, guid: 84cbf578b1ff1684f966b45e1d7af7ea,
         type: 3}
@@ -111,3 +116,24 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 5328014315775340481, guid: 84cbf578b1ff1684f966b45e1d7af7ea, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 84cbf578b1ff1684f966b45e1d7af7ea, type: 3}
+--- !u!1 &2238711088567445892 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5328014315764079137, guid: 84cbf578b1ff1684f966b45e1d7af7ea,
+    type: 3}
+  m_PrefabInstance: {fileID: 6260451074505323429}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3415628168275180175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2238711088567445892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe04427746456644bad65b6243e88ab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minVelocity: 0.05
+  birdCollider: 0.235
+  birdColliderBig: 0.5

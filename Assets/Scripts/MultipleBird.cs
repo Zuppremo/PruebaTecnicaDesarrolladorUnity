@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class MultipleBird : Bird
 {
-    [SerializeField] private float distanceBetweenBuilding = 4F;
     [SerializeField] private float copiesScale = 0.8F;
-    [SerializeField] private Transform constructionPosition = default;
     [SerializeField] private GameObject birdCopy = default;
     [SerializeField] private GameObject birdPositionUp = default;
     [SerializeField] private GameObject birdPositionDown = default;
@@ -39,12 +37,17 @@ public class MultipleBird : Bird
     }
     private void GetVelocityAndAngularSpeed(GameObject clone)
     {
-        clone.transform.localScale -= transform.localScale * copiesScale;
+        ChangeScaleOfCopies(clone);
         clone.GetComponent<Rigidbody2D>().velocity = GetComponent<Rigidbody2D>().velocity;
         clone.GetComponent<Rigidbody2D>().angularVelocity = GetComponent<Rigidbody2D>().angularVelocity;
     }
 
-    private IEnumerator DestroyAfterSeconds()
+    private void ChangeScaleOfCopies(GameObject clone)
+    {
+        clone.transform.localScale -= transform.localScale * copiesScale;
+    }
+
+    private IEnumerator DissapearBirdAfterTime()
     {
         yield return new WaitForSeconds(2F);
         gameObject.SetActive(false);
