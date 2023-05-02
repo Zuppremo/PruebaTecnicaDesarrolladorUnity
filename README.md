@@ -11,7 +11,6 @@
 a screen bounds
 * Se removieron un script el cual no se necesitaba 
 * Se hizo uso de herencia para crear los diferentes comportamientos de los nuevos pajaros como lo fueron el pajaro explosivo o el pajaron multiple
-* 
 
 ## Cosas que faltaron
 
@@ -20,4 +19,4 @@ a screen bounds
 * Mejoras en el movimiento de la camara, con Cinemachine, se hubiese facilitado el uso de las transiciones
 * Implementar el new input system de Unity, hubiese sido lo ideal.
 * Una UI mucho mas completa.
-
+* Separar las visuales del Pig, de la logica de su vida, para hacerlo menos dependiente.
