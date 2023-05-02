@@ -10,7 +10,7 @@ public class Brick : MonoBehaviour, IHealth
 
     public int CurrentHealth => currentHealth;
 
-    private void Start()
+    private void Awake()
     {
         currentHealth = maxHealth;
     }

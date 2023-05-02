@@ -13,8 +13,9 @@ public class ExplosionBird : Bird
     [SerializeField] private LayerMask layerToExplode;
     private bool hasBirdExploded = false;
     private Rigidbody2D rb;
-
+    
     public event Action BirdExplodedAction;
+    public override Birds BirdType => Birds.Explosive;
 
     private void Start()
     {

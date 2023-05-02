@@ -11,7 +11,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject startScreen = default;
     private GameManager gameManager;
 
-    private void Start()
+    private void Awake()
     {
         gameManager = GetComponent<GameManager>();
     }

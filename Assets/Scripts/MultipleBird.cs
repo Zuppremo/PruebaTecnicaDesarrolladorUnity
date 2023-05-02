@@ -10,12 +10,14 @@ public class MultipleBird : Bird
     [SerializeField] private GameObject birdPositionUp = default;
     [SerializeField] private GameObject birdPositionDown = default;
     private bool isBirdMultiplied = false;
+
+    public override Birds BirdType => Birds.Multiple;
     private void MultiplyBird()
     {
         if (!isBirdMultiplied)
         {
             isBirdMultiplied = true;
-            GameObject birdCloneUp = Instantiate(birdCopy, birdPositionUp.transform.position, Quaternion.Euler(0,0,45));
+            GameObject birdCloneUp = Instantiate(birdCopy, birdPositionUp.transform.position, Quaternion.Euler(0, 0, 45));
             GetVelocityAndAngularSpeed(birdCloneUp);
             GameObject birdCloneMid = Instantiate(birdCopy, transform.position, Quaternion.identity);
             GetVelocityAndAngularSpeed(birdCloneMid);
@@ -38,8 +40,8 @@ public class MultipleBird : Bird
     private void GetVelocityAndAngularSpeed(GameObject clone)
     {
         ChangeScaleOfCopies(clone);
-        clone.GetComponent<Rigidbody2D>().velocity = GetComponent<Rigidbody2D>().velocity * 0.7F;
-        clone.GetComponent<Rigidbody2D>().angularVelocity = GetComponent<Rigidbody2D>().angularVelocity * 0.7F;
+        clone.GetComponent<Rigidbody2D>().velocity = GetComponent<Rigidbody2D>().velocity * 0.6F;
+        clone.GetComponent<Rigidbody2D>().angularVelocity = GetComponent<Rigidbody2D>().angularVelocity * 0.6F;
     }
 
     private void ChangeScaleOfCopies(GameObject clone)

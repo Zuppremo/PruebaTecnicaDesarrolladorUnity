@@ -5,13 +5,11 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
-
     [SerializeField] private CameraFollow cameraFollow;
     [SerializeField] private SlingShot slingshot;
     [SerializeField] private Bird[] birds;
     private int currentBirdIndex;
     public static GameState currentGameState = GameState.Start;
-    private Brick[] bricks;
     private Pig[] pigs;
     private UIController uiController;
 
@@ -21,7 +19,6 @@ public class GameManager : MonoBehaviour
     {
         uiController = FindObjectOfType<UIController>();
         birds = FindObjectsOfType<Bird>();
-        bricks = FindObjectsOfType<Brick>();
         pigs = FindObjectsOfType<Pig>();
         currentGameState = GameState.Start;
         slingshot.enabled = false;
@@ -58,7 +55,6 @@ public class GameManager : MonoBehaviour
                 {
                     uiController.ToggleUI(true);
                     uiController.ToggleLoseScreen(true);
-                    //Application.LoadLevel(Application.loadedLevel);
                 }
                 break;
             default:

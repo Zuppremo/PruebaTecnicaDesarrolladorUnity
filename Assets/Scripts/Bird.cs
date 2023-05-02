@@ -8,9 +8,9 @@ public class Bird : MonoBehaviour
     [SerializeField] private float minVelocity = 0.05f;
     [SerializeField] private float birdCollider = 0.235f;
     [SerializeField] private float birdColliderBig = 0.5f;
-    [SerializeField] private Birds birds = Birds.Normal;
-    public BirdState State { get; private set; }
 
+    public BirdState State { get; private set; }
+    public virtual Birds BirdType { get;}
 
     private void Start()
     {
